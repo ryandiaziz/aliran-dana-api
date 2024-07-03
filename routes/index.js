@@ -1,8 +1,8 @@
-import express from 'express'
-// import barangRoute from './barangRoutes.js'
-// import penjualanRoute from './penjualanRoutes.js'
-import accountRoutes from './accountRoutes.js'
-const route = express.Router()
+import express from 'express';
+import accountRoutes from './accountRoutes.js';
+import userRoutes from './userRoutes.js';
+
+const route = express.Router();
 
 route.get('/', (req, res) => {
     res.json({
@@ -10,10 +10,8 @@ route.get('/', (req, res) => {
     })
 })
 
-route.use('/accounts', accountRoutes)
-// route.use('/barang', barangRoute)
-// route.use('/penjualan', penjualanRoute)
-
+route.use('/accounts', accountRoutes);
+route.use('/users', userRoutes);
 
 
 export default route

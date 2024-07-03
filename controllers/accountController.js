@@ -1,24 +1,15 @@
-import accountModel from '../models/accountModel.js';
-import AccountModel from '../models/accountModel.js'
-// import { tokenGenerator } from "../helper/jsonWebToken.js";
-// import { decryptPwd } from "../helper/encrypt.js";
-// import { validateUserInput } from '../helper/validate.js';
+import AccountModel from '../models/accountModel.js';
+import Response from '../helpers/response.js';
 
-class accountController {
+class AccountController {
     static async index(req, res) {
         try {
             // const { pageSize, page } = req.query
             const data = await AccountModel.index();
 
-            res.json({
-                status: true,                
-                data
-            })
+            res.json(Response.success(data, "Berhasil mendapatkan data account"));
         } catch (err) {
-            res.json({
-                status: false,
-                message: err.message
-            })
+            res.json(Response.failed(err.message));
         }
     }
 
@@ -27,15 +18,15 @@ class accountController {
             const { id } = req.params
             const data = await AccountModel.getOneAccount(id);
 
-            res.json({
-                status: true,                
-                data
-            })
+            const check = await AccountModel.getOneAccount(id);
+
+            if (!check) {
+                throw new Error('item not found')
+            }
+
+            res.json(Response.success(data, "Berhasil mendapatkan account"));
         } catch (err) {
-            res.json({
-                status: false,
-                message: err.message
-            })
+            res.json(Response.failed(err.message));
         }
     }
 
@@ -44,15 +35,9 @@ class accountController {
             const { name, balance } = req.body;
             const response = await AccountModel.createAccount(name, balance);
 
-            res.json({
-                status: true,
-                data: response
-            })
+            res.json(Response.success(response, "Berhasil menambahkan data account"));
         } catch (error) {
-            res.json({
-                status: false,
-                message: error.message
-            })
+            res.json(Response.failed(err.message));
         }
     }
 
@@ -61,98 +46,35 @@ class accountController {
             const { id } = req.params
             const { name } = req.body
 
-            const data = await AccountModel.updateAccount(id, name)
-
-            res.send(data)
-        } catch (error) {
-            res.json({
-                status: false,
-                message: error.message
-            })
-        }
-    }
-
-    static async deleteBarang(req, res) {
-        try {
-            const { id } = req.params;            
-            const check = await accountModel.getOneAccount(id);
+            const check = await AccountModel.getOneAccount(id);
 
             if (!check) {
                 throw new Error('item not found')
             }
+            const data = await AccountModel.updateAccount(id, name)
 
-            const response = await AccountModel.deleteAccount(id)
-            res.json({
-                status: true,
-                message: response
-            })
+            res.json(Response.success(data, "Berhasil memperbarui data account"));
         } catch (error) {
-            res.json({
-                status: false,
-                message: error.message
-            })
+            res.json(Response.failed(err.message));
         }
     }
 
-    // static async createUser(req, res) {
-    //     try {
-    //         const { nama, email, password } = req.body
-    //         validateUserInput({ nama, email, password })
+    static async deleteAccount(req, res) {
+        try {
+            const { id } = req.params;            
+            const check = await AccountModel.getOneAccount(id);
 
-    //         const message = await UserModel.createuser(nama, email, password)
+            if (!check) {
+                throw new Error('item not found');
+            }
 
-    //         res.json({
-    //             status: true,
-    //             message
-    //         })
-    //     } catch (err) {
-    //         res.json({
-    //             status: false,
-    //             message: err.message
-    //         })
-    //     }
-    // }
-
-    // static async login(req, res) {
-    //     try {
-    //         const { email, password } = req.body
-    //         const userData = await UserModel.getOneUser(email)
-
-    //         if (userData.length) {
-    //             if (decryptPwd(password, userData[0].password)) {
-    //                 let access_token = tokenGenerator(...userData)
-    //                 res.status(200).json({
-    //                     status: "ok",
-    //                     access_token: access_token,
-    //                 });
-    //             } else {
-    //                 res.status(403).json({
-    //                     status: "error",
-    //                     message: "invalid password"
-    //                 })
-    //             }
-    //         } else {
-    //             res.status(404).json({
-    //                 status: "error",
-    //                 message: "User not found"
-    //             })
-    //         }
-    //     } catch (err) {
-    //         res.json({
-    //             status: false,
-    //             message: err.message
-    //         })
-    //     }
-    // }
-
-    // static async getAccount(req, res) {
-    //     try {
-
-    //     } catch (err) {
-
-    //     }
-    // }
+            const response = await AccountModel.deleteAccount(id);
+            res.json(Response.success(response, "Berhasil menghapus data account"));
+        } catch (error) {
+            res.json(Response.failed(err.message));
+        }
+    }
 
 }
 
-export default accountController
+export default AccountController
