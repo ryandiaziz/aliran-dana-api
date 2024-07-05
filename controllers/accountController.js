@@ -32,11 +32,11 @@ class AccountController {
 
     static async createAccount(req, res) {
         try {
-            const { name, balance } = req.body;
-            const response = await AccountModel.createAccount(name, balance);
+            const { name, balance, user_id } = req.body;
+            const response = await AccountModel.createAccount(name, balance, user_id);
 
             res.json(Response.success(response, "Berhasil menambahkan data account"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }
@@ -44,17 +44,17 @@ class AccountController {
     static async updateAccount(req, res) {
         try {
             const { id } = req.params
-            const { name } = req.body
+            const { account_name, account_balance } = req.body
 
             const check = await AccountModel.getOneAccount(id);
 
             if (!check) {
                 throw new Error('item not found')
             }
-            const data = await AccountModel.updateAccount(id, name)
+            const data = await AccountModel.updateAccount(id, account_name, account_balance)
 
             res.json(Response.success(data, "Berhasil memperbarui data account"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }
@@ -70,7 +70,7 @@ class AccountController {
 
             const response = await AccountModel.deleteAccount(id);
             res.json(Response.success(response, "Berhasil menghapus data account"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }

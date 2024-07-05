@@ -30,11 +30,10 @@ class UserController {
 
     static async createUser(req, res) {
         try {
-            const { name, balance } = req.body;
-            const response = await UserModel.createUser(name, balance);
+            const response = await UserModel.createUser({...req.body});
 
             res.json(Response.success(response, "Berhasil menambahkan data user"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }
@@ -42,17 +41,14 @@ class UserController {
     static async updateUser(req, res) {
         try {
             const { id } = req.params
-            const { name } = req.body
-
             const check = await UserModel.getOneUser(id);
-
             if (!check) {
                 throw new Error('User tidak ditemukan')
             }
-            const data = await UserModel.updateUser(id, name)
 
+            const data = await UserModel.updateUser({...req.body, id});
             res.json(Response.success(data, "Berhasil memperbarui data user"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }
@@ -60,7 +56,7 @@ class UserController {
     static async deleteUser(req, res) {
         try {
             const { id } = req.params;            
-            const check = await UserModel.getOneAccount(id);
+            const check = await UserModel.getOneUser(id);
 
             if (!check) {
                 throw new Error('User tidak ditemukan');
@@ -68,7 +64,7 @@ class UserController {
 
             const response = await UserModel.deleteUser(id);
             res.json(Response.success(response, "Berhasil menghapus data user"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }

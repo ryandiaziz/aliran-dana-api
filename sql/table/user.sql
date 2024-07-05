@@ -6,6 +6,6 @@ CREATE TABLE public.users (
 	created_at timestamp DEFAULT NOW() NOT NULL,
 	updated_at timestamp DEFAULT NOW() NOT NULL,
 	CONSTRAINT users_pk PRIMARY KEY (user_id),
-	CONSTRAINT users_unique UNIQUE (username),
+	CONSTRAINT users_unique_username UNIQUE (username),
 	CONSTRAINT users_unique_email UNIQUE (email)
 );

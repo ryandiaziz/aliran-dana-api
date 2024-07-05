@@ -1,18 +1,18 @@
 import DbUtils from "../helpers/DbUtils.js";
 
-class AccountModel {    
-    static TABLE_NAME = "accounts";
-    static ID_NAME = "account_id";
+class CategoryModel {    
+    static TABLE_NAME = "categories";
+    static ID_NAME = "category_id";
 
     static async index(pageSize = 0, page = 1) {
         return DbUtils.index(this.TABLE_NAME);
     }
 
-    static async getOneAccount(id){
-        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);        
+    static async getOneCategory(id){
+        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
     }
     
-    static async createAccount(name, balance, user_id) {
+    static async createCategory(name, balance, user_id) {
         const query = {
             text: `INSERT INTO ${this.TABLE_NAME}(account_name, account_balance, user_id, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
             values: [name, balance, user_id]
@@ -21,7 +21,7 @@ class AccountModel {
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateAccount(id, account_name, account_balance) {
+    static async updateCategory(id, account_name, account_balance) {
         const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
         
         console.log(account);
@@ -42,9 +42,9 @@ class AccountModel {
         return DbUtils.createAndUpdate(query);        
     }
 
-    static async deleteAccount(id) {
+    static async deleteCategory(id) {
         return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);        
     }
 }
 
-export default AccountModel
+export default CategoryModel

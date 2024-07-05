@@ -9,25 +9,39 @@ class UserModel {
     }
 
     static async getOneUser(id){
-        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);        
+        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
     }
     
-    static async createUser(name, balance) {
+    static async createUser({username, email, password}) {
         const query = {
-            text: `INSERT INTO ${this.TABLE_NAME}(account_name, account_balance, created_at, updated_at) VALUES($1,$2, NOW(), NOW()) RETURNING *`,
-            values: [name, balance]
+            text: `INSERT INTO ${this.TABLE_NAME}(username, email, password, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
+            values: [username, email, password]
         }
         
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateUser(id, name) {
-        const query = {
-            text: `UPDATE ${this.TABLE_NAME} SET account_name = $1, updated_at = NOW() WHERE ${this.ID_NAME} = $2 RETURNING *`,
-            values: [name, id]
+    static async updateUser({username, email, password, id}) {
+        const user = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);                
+        
+        if (!username) {
+            username = user.username;
         }
 
-        return DbUtils.createAndUpdate(query);        
+        if (!email) {
+            email = user.email;
+        }
+
+        if (!password) {
+            password = user.password;
+        }
+
+        const query = {
+            text: `UPDATE ${this.TABLE_NAME} SET username = $1, email = $2, password = $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,
+            values: [username, email, password, id]
+        };
+
+        return DbUtils.createAndUpdate(query);
     }
 
     static async deleteUser(id) {

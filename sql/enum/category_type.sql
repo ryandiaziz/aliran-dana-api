@@ -1,0 +1,1 @@
+CREATE TYPE category_type AS ENUM ('income', 'expense');
