@@ -12,31 +12,31 @@ class CategoryModel {
         return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
     }
     
-    static async createCategory(name, balance, user_id) {
+    static async createCategory({category_name, category_type, user_id}) {
         const query = {
-            text: `INSERT INTO ${this.TABLE_NAME}(account_name, account_balance, user_id, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
-            values: [name, balance, user_id]
+            text: `INSERT INTO ${this.TABLE_NAME}(category_name, category_type, user_id, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
+            values: [category_name, category_type, user_id]
         }
         
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateCategory(id, account_name, account_balance) {
-        const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+    static async updateCategory({category_name, category_type, id}) {
+        const category = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
         
-        console.log(account);
+        console.log(category);
         
-        if (!account_name) {
-            account_name = account.account_name;
+        if (!category_name) {
+            category_name = category.category_name;
         }
 
-        if (!account_balance) {
-            account_balance = account.account_balance;
+        if (!category_type) {
+            category_type = category.category_type;
         }
         
         const query = {
-            text: `UPDATE ${this.TABLE_NAME} SET account_name = $1, account_balance = $2, updated_at = NOW() WHERE ${this.ID_NAME} = $3 RETURNING *`,
-            values: [account_name, account_balance, id]
+            text: `UPDATE ${this.TABLE_NAME} SET category_name = $1, category_type = $2, created_at =  $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,
+            values: [category_name, category_type, category.created_at, id]
         }
         
         return DbUtils.createAndUpdate(query);        

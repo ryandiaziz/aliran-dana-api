@@ -32,8 +32,7 @@ class CategoryController {
 
     static async createCategory(req, res) {
         try {
-            const { name, balance, user_id } = req.body;
-            const response = await CategoryModel.createCategory(name, balance, user_id);
+            const response = await CategoryModel.createCategory({...req.body});
 
             res.json(Response.success(response, "Berhasil menambahkan data category"));
         } catch (err) {
@@ -43,15 +42,13 @@ class CategoryController {
 
     static async updateCategory(req, res) {
         try {
-            const { id } = req.params
-            const { account_name, account_balance } = req.body
+            const { id } = req.params;
 
             const check = await CategoryModel.getOneCategory(id);
-
             if (!check) {
                 throw new Error('item not found')
             }
-            const data = await CategoryModel.updateCategory(id, account_name, account_balance)
+            const data = await CategoryModel.updateCategory({...req.body, id})
 
             res.json(Response.success(data, "Berhasil memperbarui data category"));
         } catch (err) {
