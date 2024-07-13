@@ -21,6 +21,15 @@ class DbUtils{
         }
     }
 
+    static async indexQuery(query) {
+        try {            
+            const data = await pool.query(query);
+            return data.rows;
+        } catch (error) {
+            throw (error)
+        }
+    }
+
     static async getOne(table_name, id_name, id){
         try {
             const res = await pool.query(`SELECT * FROM ${table_name} WHERE ${id_name} = $1`, [id]);

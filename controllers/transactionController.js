@@ -7,7 +7,25 @@ class TransactionController {
             // const { pageSize, page } = req.query
             const data = await TransactionModel.index();
 
-            res.json(Response.success(data, "Berhasil mendapatkan data transaksi"));
+            const results = data.map((v, i) => {
+                return {
+                    transaction_id : v.transaction_id,
+                    transaction_amount : v.transaction_amount,
+                    transaction_type : v.transaction_type,
+                    transaction_note : v.transaction_note,
+                    transaction_date : v.transaction_date,
+                    account : {
+                        account_id : v.account_id,
+                        account_name : v.account_name
+                    },
+                    category : {
+                        category_id : v.category_id,
+                        category_name : v.category_name
+                    }
+                }
+            });
+
+            res.json(Response.success(results, "Berhasil mendapatkan data transaksi"));
         } catch (err) {
             res.json(Response.failed(err.message));
         }

@@ -5,7 +5,26 @@ class TransactionModel {
     static ID_NAME = "transaction_id";
 
     static async index(pageSize = 0, page = 1) {
-        return DbUtils.index(this.TABLE_NAME);
+        const query = `
+            SELECT
+                t.transaction_id,
+                t.transaction_note,
+                t.transaction_amount,
+                t.transaction_type,
+                t.transaction_date,
+                a.account_id,
+                a.account_name,
+                c.category_id,
+                c.category_name
+            FROM 
+                transactions t
+            JOIN 
+                accounts a ON t.account_id = a.account_id
+            JOIN 
+                categories c ON t.category_id = c.category_id;
+        `
+
+        return DbUtils.indexQuery(query);
     }
 
     static async getOneTransaction(id){
