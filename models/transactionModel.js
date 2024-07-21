@@ -1,4 +1,5 @@
 import DbUtils from "../helpers/DbUtils.js";
+import AccountModel from "./accountModel.js";
 
 class TransactionModel {    
     static TABLE_NAME = "transactions";
@@ -21,7 +22,8 @@ class TransactionModel {
             JOIN 
                 accounts a ON t.account_id = a.account_id
             JOIN 
-                categories c ON t.category_id = c.category_id;
+                categories c ON t.category_id = c.category_id
+            ORDER BY t.transaction_id DESC;
         `
 
         return DbUtils.indexQuery(query);
@@ -40,6 +42,8 @@ class TransactionModel {
         category_id,
         account_id
     }) {
+        await AccountModel.transactionAccount(account_id, transaction_amount, transaction_type);
+
         const query = {
             text: `INSERT INTO ${this.TABLE_NAME}(transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *`,
             values: [transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id]
