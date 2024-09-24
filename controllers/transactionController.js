@@ -76,7 +76,7 @@ class TransactionController {
 
     static async deleteTransaction(req, res) {
         try {
-            const { id } = req.params;            
+            const { id } = req.params;
             const check = await TransactionModel.getOneTransaction(id);
 
             if (!check) {
@@ -90,6 +90,33 @@ class TransactionController {
         }
     }
 
+    static async searchTransaction(req, res){
+        try {
+            const { date } = req.query;
+            const response = await TransactionModel.searchTransaction(date);
+            const results = response.map((v, i) => {
+                return {
+                    transaction_id : v.transaction_id,
+                    transaction_amount : v.transaction_amount,
+                    transaction_type : v.transaction_type,
+                    transaction_note : v.transaction_note,
+                    transaction_date : v.transaction_date,
+                    account : {
+                        account_id : v.account_id,
+                        account_name : v.account_name
+                    },
+                    category : {
+                        category_id : v.category_id,
+                        category_name : v.category_name
+                    }
+                }
+            });
+
+            res.json(Response.success(results, "Berhasil mendapatkan data transaksi"));
+        } catch (error) {
+            res.json(Response.failed(err.message));
+        }
+    }
 }
 
 export default TransactionController;

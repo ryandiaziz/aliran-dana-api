@@ -93,6 +93,10 @@ class TransactionModel {
     static async deleteTransaction(id) {
         return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);        
     }
+
+    static async searchTransaction(date){
+        return DbUtils.searchByDate(date);
+    }
 }
 
 export default TransactionModel
