@@ -21,8 +21,8 @@ class AccountModel {
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateAccount(id, account_name, account_balance) {
-        const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);        
+    static async updateAccount(account_id,account_name, account_balance) {
+        const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, account_id);        
         
         if (!account_name) {
             account_name = account.account_name;
@@ -34,7 +34,7 @@ class AccountModel {
         
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET account_name = $1, account_balance = $2, updated_at = NOW() WHERE ${this.ID_NAME} = $3 RETURNING *`,
-            values: [account_name, account_balance, id]
+            values: [account_name, account_balance, account_id]
         }
         
         return DbUtils.createAndUpdate(query);        

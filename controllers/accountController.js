@@ -43,15 +43,13 @@ class AccountController {
 
     static async updateAccount(req, res) {
         try {
-            const { id } = req.params
-            const { account_name, account_balance } = req.body
-
-            const check = await AccountModel.getOneAccount(id);
+            const { account_id, account_name, account_balance } = req.body
+            const check = await AccountModel.getOneAccount(account_id);
 
             if (!check) {
                 throw new Error('item not found')
             }
-            const data = await AccountModel.updateAccount(id, account_name, account_balance)
+            const data = await AccountModel.updateAccount(account_id, account_name, account_balance)
 
             res.json(Response.success(data, "Berhasil memperbarui data account"));
         } catch (err) {

@@ -65,8 +65,6 @@ class DbUtils{
     }
 
     static async searchByDate(date){
-        console.log(date);
-        
         try {
             const query = {
                 text : `

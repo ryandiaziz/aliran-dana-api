@@ -21,8 +21,8 @@ class CategoryModel {
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateCategory({category_name, category_type, id}) {
-        const category = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+    static async updateCategory({category_id, category_name, category_type}) {
+        const category = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, category_id);
         
         console.log(category);
         
@@ -35,8 +35,8 @@ class CategoryModel {
         }
         
         const query = {
-            text: `UPDATE ${this.TABLE_NAME} SET category_name = $1, category_type = $2, created_at =  $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,
-            values: [category_name, category_type, category.created_at, id]
+            text: `UPDATE ${this.TABLE_NAME} SET category_name = $1, category_type = $2, created_at = $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,
+            values: [category_name, category_type, category.created_at, category_id]
         }
         
         return DbUtils.createAndUpdate(query);        

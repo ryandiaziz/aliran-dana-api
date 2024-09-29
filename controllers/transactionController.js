@@ -113,7 +113,7 @@ class TransactionController {
             });
 
             res.json(Response.success(results, "Berhasil mendapatkan data transaksi"));
-        } catch (error) {
+        } catch (err) {
             res.json(Response.failed(err.message));
         }
     }

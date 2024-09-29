@@ -42,13 +42,13 @@ class CategoryController {
 
     static async updateCategory(req, res) {
         try {
-            const { id } = req.params;
+            const { category_id, category_name, category_type } = req.body
 
-            const check = await CategoryModel.getOneCategory(id);
+            const check = await CategoryModel.getOneCategory(category_id);
             if (!check) {
                 throw new Error('item not found')
             }
-            const data = await CategoryModel.updateCategory({...req.body, id})
+            const data = await CategoryModel.updateCategory({category_id, category_name, category_type})
 
             res.json(Response.success(data, "Berhasil memperbarui data category"));
         } catch (err) {
