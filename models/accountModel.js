@@ -5,7 +5,10 @@ class AccountModel {
     static ID_NAME = "account_id";
 
     static async index(pageSize = 0, page = 1) {
-        return DbUtils.index(this.TABLE_NAME);
+        return DbUtils.index({
+            tableName : this.TABLE_NAME,
+            order : `ORDER BY ${this.ID_NAME}`
+        });
     }
 
     static async getOneAccount(id){

@@ -1,14 +1,14 @@
 import pool from "../connection.js";
 
 class DbUtils{
-    static async index(table_name, pageSize = 0, page = 1) {
+    static async index({tableName, pageSize = 0, page = 1, order = ''}) {
         try {
             const queryDefault = {
-                text: `SELECT * FROM ${table_name}`
+                text: `SELECT * FROM ${tableName} ${order}`
             };
 
             const queryPagination = {
-                text: `SELECT * FROM ${table_name} LIMIT $1 OFFSET $2`,
+                text: `SELECT * FROM ${tableName} LIMIT $1 OFFSET $2 ${order}`,
                 values: [pageSize, ((page - 1) * pageSize)]
             };
 
