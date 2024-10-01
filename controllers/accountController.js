@@ -5,9 +5,9 @@ class AccountController {
     static async index(req, res) {
         try {
             // const { pageSize, page } = req.query
-            const data = await AccountModel.index();
-
-            res.json(Response.success(data, "Berhasil mendapatkan data account"));
+            const accounts = await AccountModel.index();
+            const { total } = await AccountModel.countTotalBalance();
+            res.json(Response.success({ total: parseInt(total), accounts }, "Berhasil mendapatkan data account"));
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -32,8 +32,8 @@ class AccountController {
 
     static async createAccount(req, res) {
         try {
-            const { name, balance, user_id } = req.body;
-            const response = await AccountModel.createAccount(name, balance, user_id);
+            const { account_name, account_balance, user_id } = req.body;
+            const response = await AccountModel.createAccount(account_name, account_balance, user_id);
 
             res.json(Response.success(response, "Berhasil menambahkan data account"));
         } catch (err) {
@@ -59,7 +59,7 @@ class AccountController {
 
     static async deleteAccount(req, res) {
         try {
-            const { id } = req.params;            
+            const { id } = req.params;
             const check = await AccountModel.getOneAccount(id);
 
             if (!check) {

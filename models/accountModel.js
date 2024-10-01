@@ -15,10 +15,10 @@ class AccountModel {
         return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);        
     }
     
-    static async createAccount(name, balance, user_id) {
+    static async createAccount(account_name, account_balance, user_id) {
         const query = {
             text: `INSERT INTO ${this.TABLE_NAME}(account_name, account_balance, user_id, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
-            values: [name, balance, user_id]
+            values: [account_name, account_balance, user_id]
         }
         
         return DbUtils.createAndUpdate(query);
@@ -66,6 +66,10 @@ class AccountModel {
 
     static async deleteAccount(id) {
         return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);        
+    }
+
+    static async countTotalBalance(){
+        return DbUtils.totalAccountBalance();
     }
 }
 
