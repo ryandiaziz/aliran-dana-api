@@ -9,18 +9,18 @@ class TransactionController {
 
             const results = data.map((v, i) => {
                 return {
-                    transaction_id : v.transaction_id,
-                    transaction_amount : v.transaction_amount,
-                    transaction_type : v.transaction_type,
-                    transaction_note : v.transaction_note,
-                    transaction_date : v.transaction_date,
-                    account : {
-                        account_id : v.account_id,
-                        account_name : v.account_name
+                    transaction_id: v.transaction_id,
+                    transaction_amount: v.transaction_amount,
+                    transaction_type: v.transaction_type,
+                    transaction_note: v.transaction_note,
+                    transaction_date: v.transaction_date,
+                    account: {
+                        account_id: v.account_id,
+                        account_name: v.account_name
                     },
-                    category : {
-                        category_id : v.category_id,
-                        category_name : v.category_name
+                    category: {
+                        category_id: v.category_id,
+                        category_name: v.category_name
                     }
                 }
             });
@@ -50,7 +50,7 @@ class TransactionController {
 
     static async createTransaction(req, res) {
         try {
-            const response = await TransactionModel.createTransaction({...req.body});
+            const response = await TransactionModel.createTransaction({ ...req.body });
 
             res.json(Response.success(response, "Berhasil menambahkan data transaksi"));
         } catch (err) {
@@ -66,7 +66,7 @@ class TransactionController {
             if (!check) {
                 throw new Error('item not found')
             }
-            const data = await TransactionModel.updateTransaction({...req.body, id})
+            const data = await TransactionModel.updateTransaction({ ...req.body, id })
 
             res.json(Response.success(data, "Berhasil memperbarui data transaksi"));
         } catch (err) {
@@ -90,29 +90,31 @@ class TransactionController {
         }
     }
 
-    static async searchTransaction(req, res){
+    static async searchTransaction(req, res) {
         try {
             const { date } = req.query;
             const response = await TransactionModel.searchTransaction(date);
-            const results = response.map((v, i) => {
+            const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(date);
+
+            const transactions = response.map((v, i) => {
                 return {
-                    transaction_id : v.transaction_id,
-                    transaction_amount : v.transaction_amount,
-                    transaction_type : v.transaction_type,
-                    transaction_note : v.transaction_note,
-                    transaction_date : v.transaction_date,
-                    account : {
-                        account_id : v.account_id,
-                        account_name : v.account_name
+                    transaction_id: v.transaction_id,
+                    transaction_amount: v.transaction_amount,
+                    transaction_type: v.transaction_type,
+                    transaction_note: v.transaction_note,
+                    transaction_date: v.transaction_date,
+                    account: {
+                        account_id: v.account_id,
+                        account_name: v.account_name
                     },
-                    category : {
-                        category_id : v.category_id,
-                        category_name : v.category_name
+                    category: {
+                        category_id: v.category_id,
+                        category_name: v.category_name
                     }
                 }
             });
 
-            res.json(Response.success(results, "Berhasil mendapatkan data transaksi"));
+            res.json(Response.success({ count: { expense: parseInt(total_expense), income: parseInt(total_income) }, transactions }, "Berhasil mendapatkan data transaksi"));
         } catch (err) {
             res.json(Response.failed(err.message));
         }

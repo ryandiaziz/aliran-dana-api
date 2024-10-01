@@ -1,7 +1,7 @@
 import pool from "../connection.js";
 
-class DbUtils{
-    static async index({tableName, pageSize = 0, page = 1, order = ''}) {
+class DbUtils {
+    static async index({ tableName, pageSize = 0, page = 1, order = '' }) {
         try {
             const queryDefault = {
                 text: `SELECT * FROM ${tableName} ${order}`
@@ -22,7 +22,7 @@ class DbUtils{
     }
 
     static async indexQuery(query) {
-        try {            
+        try {
             const data = await pool.query(query);
             return data.rows;
         } catch (error) {
@@ -30,7 +30,7 @@ class DbUtils{
         }
     }
 
-    static async getOne(table_name, id_name, id){
+    static async getOne(table_name, id_name, id) {
         try {
             const res = await pool.query(`SELECT * FROM ${table_name} WHERE ${id_name} = $1`, [id]);
             return res.rows[0];
@@ -39,15 +39,15 @@ class DbUtils{
         }
     }
 
-    static async createAndUpdate(query){
-        try {                
+    static async createAndUpdate(query) {
+        try {
             const data = await pool.query(query)
-    
+
             return data.rows
         } catch (error) {
             throw (error)
         }
-    }    
+    }
 
     static async delete(table_name, id_name, id) {
         try {
@@ -64,10 +64,10 @@ class DbUtils{
         }
     }
 
-    static async searchByDate(date){
+    static async searchByDate(date) {
         try {
             const query = {
-                text : `
+                text: `
                         SELECT
                             t.transaction_id,
                             t.transaction_note,
@@ -89,11 +89,53 @@ class DbUtils{
                         ORDER BY 
                             t.transaction_date DESC
                     `,
-                values : [date]
+                values: [date]
             }
 
             const data = await pool.query(query);
             return data.rows;
+        } catch (error) {
+            throw (error)
+        }
+    }
+
+    static async countIncomeAndExpense(date) {
+        try {
+            const query = {
+                text: `
+                    SELECT
+                        SUM(CASE WHEN t.transaction_type = 'income' THEN t.transaction_amount ELSE 0 END) AS total_income,
+                        SUM(CASE WHEN t.transaction_type = 'expense' THEN t.transaction_amount ELSE 0 END) AS total_expense
+                    FROM 
+                        transactions t
+                    JOIN 
+                        accounts a ON t.account_id = a.account_id
+                    JOIN 
+                        categories c ON t.category_id = c.category_id
+                    WHERE 
+                        DATE(t.transaction_date) = $1
+                    `,
+                values: [date]
+            }
+
+            const data = await pool.query(query);
+            return data.rows[0];
+        } catch (error) {
+            throw (error)
+        }
+    }
+
+    static async totalAccountBalance() {
+        try {
+            const query = `
+                SELECT 
+                    SUM(account_balance) AS total
+                FROM 
+                    accounts
+            `;
+
+            const res = await pool.query(query);
+            return res.rows[0];
         } catch (error) {
             throw (error)
         }

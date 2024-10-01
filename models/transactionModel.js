@@ -97,6 +97,10 @@ class TransactionModel {
     static async searchTransaction(date){
         return DbUtils.searchByDate(date);
     }
+
+    static async countTransactionIncomeAndExpense(date){
+        return DbUtils.countIncomeAndExpense(date);
+    }
 }
 
 export default TransactionModel
