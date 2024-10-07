@@ -114,7 +114,13 @@ class TransactionController {
                 }
             });
 
-            res.json(Response.success({ count: { expense: parseInt(total_expense), income: parseInt(total_income) }, transactions }, "Berhasil mendapatkan data transaksi"));
+            const count = {
+                expense: parseInt(total_expense),
+                income: parseInt(total_income),
+                total: parseInt(total_income) - parseInt(total_expense)
+            }
+
+            res.json(Response.success({ count, transactions }, "Berhasil mendapatkan data transaksi"));
         } catch (err) {
             res.json(Response.failed(err.message));
         }
