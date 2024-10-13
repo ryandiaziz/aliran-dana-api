@@ -26,16 +26,8 @@ class CategoryModel {
 
     static async updateCategory({category_id, category_name, category_type}) {
         const category = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, category_id);
-        
-        console.log(category);
-        
-        if (!category_name) {
-            category_name = category.category_name;
-        }
-
-        if (!category_type) {
-            category_type = category.category_type;
-        }
+        if (!category_name) category_name = category.category_name;
+        if (!category_type) category_type = category.category_type;
         
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET category_name = $1, category_type = $2, created_at = $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,

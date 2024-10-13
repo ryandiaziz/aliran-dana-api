@@ -1,4 +1,5 @@
 import TransactionModel from '../models/transactionModel.js';
+import Parser from '../helpers/Parser.js'
 import Response from '../helpers/response.js';
 
 class TransactionController {
@@ -90,11 +91,11 @@ class TransactionController {
         }
     }
 
-    static async searchTransaction(req, res) {
+    static async filterTransaction(req, res) {
         try {
-            const { date } = req.query;
-            const response = await TransactionModel.searchTransaction(date);
-            const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(date);
+            const filters = Parser.parserTransactionFilters(req.body);
+            const response = await TransactionModel.searchTransaction(filters);            
+            const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(filters.transaction_date);
 
             const transactions = response.map((v, i) => {
                 return {

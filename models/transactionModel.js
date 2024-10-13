@@ -63,24 +63,12 @@ class TransactionModel {
     }) {
         const transaction = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);        
         
-        if (!transaction_note) {
-            transaction_note = transaction.transaction_note;
-        }
-        if (!transaction_amount) {
-            transaction_amount = transaction.transaction_amount;
-        }
-        if (!transaction_type) {
-            transaction_type = transaction.transaction_type;
-        }
-        if (!transaction_date) {
-            transaction_date = transaction.transaction_date;
-        }
-        if (!category_id) {
-            category_id = transaction.category_id;
-        }
-        if (!account_id) {
-            account_id = transaction.account_id;
-        }
+        if (!transaction_note) transaction_note = transaction.transaction_note;
+        if (!transaction_amount) transaction_amount = transaction.transaction_amount;
+        if (!transaction_type) transaction_type = transaction.transaction_type;
+        if (!transaction_date) transaction_date = transaction.transaction_date;
+        if (!category_id) category_id = transaction.category_id;
+        if (!account_id) account_id = transaction.account_id;
         
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET transaction_note = $1, transaction_amount = $2, transaction_type = $3, transaction_date = $4, category_id = $5, account_id = $6, created_at =  $7, updated_at = NOW() WHERE ${this.ID_NAME} = $8 RETURNING *`,
@@ -94,8 +82,8 @@ class TransactionModel {
         return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);        
     }
 
-    static async searchTransaction(date){
-        return DbUtils.searchByDate(date);
+    static async searchTransaction(filters){
+        return DbUtils.searchByDate(filters);
     }
 
     static async countTransactionIncomeAndExpense(date){

@@ -25,19 +25,10 @@ class UserModel {
     }
 
     static async updateUser({username, email, password, id}) {
-        const user = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);                
-        
-        if (!username) {
-            username = user.username;
-        }
-
-        if (!email) {
-            email = user.email;
-        }
-
-        if (!password) {
-            password = user.password;
-        }
+        const user = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);                        
+        if (!username) username = user.username;
+        if (!email) email = user.email;
+        if (!password) password = user.password;
 
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET username = $1, email = $2, password = $3, updated_at = NOW() WHERE ${this.ID_NAME} = $4 RETURNING *`,
