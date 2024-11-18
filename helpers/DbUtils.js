@@ -64,7 +64,7 @@ class DbUtils {
         }
     }
 
-    static async searchByDate(filters) {
+    static async searchByFilters(filters) {
         try {
             let queryText = `
                 SELECT
@@ -96,29 +96,41 @@ class DbUtils {
                 values.push(filters.user_id);
             }
 
-            if (filters.account_id && filters.account_id !== "0") {
+            if (filters.account_id) {
                 conditions.push(`t.account_id = $${conditions.length + 1}`);
                 values.push(filters.account_id);
             }
 
-            if (filters.category_id && filters.category_id !== "0") {
+            if (filters.category_id) {
                 conditions.push(`t.category_id = $${conditions.length + 1}`);
                 values.push(filters.category_id);
             }
 
-            if (filters.transaction_note && filters.transaction_note.trim() !== "") {
+            if (filters.transaction_note) {
                 conditions.push(`t.transaction_note ILIKE $${conditions.length + 1}`);
                 values.push(`%${filters.transaction_note}%`);
             }
 
-            if (filters.transaction_type && filters.transaction_type !== "all") {
+            if (filters.transaction_type) {
                 conditions.push(`t.transaction_type = $${conditions.length + 1}`);
                 values.push(filters.transaction_type);
             }
 
-            if (filters.transaction_date) {
+            // Pencarian berdasarkan rentang tanggal
+            if (filters.is_relative_date_enabled) {
+                if (filters.transaction_date_from && filters.transaction_date_to) {
+                    conditions.push(`DATE(t.transaction_date) BETWEEN $${conditions.length + 1} AND $${conditions.length + 2}`);
+                    values.push(filters.transaction_date_from, filters.transaction_date_to);
+                } else if (filters.transaction_date_from) {
+                    conditions.push(`DATE(t.transaction_date) >= $${conditions.length + 1}`);
+                    values.push(filters.transaction_date_from);
+                } else if (filters.transaction_date_to) {
+                    conditions.push(`DATE(t.transaction_date) <= $${conditions.length + 1}`);
+                    values.push(filters.transaction_date_to);
+                }
+            } else if (filters.transaction_date_from) {
                 conditions.push(`DATE(t.transaction_date) = $${conditions.length + 1}`);
-                values.push(filters.transaction_date);
+                values.push(filters.transaction_date_from);
             }
 
             // Jika ada kondisi, tambahkan WHERE clause
@@ -140,7 +152,7 @@ class DbUtils {
         }
     }
 
-    static async countIncomeAndExpense(date) {
+    static async countIncomeAndExpense(filters) {
         try {
             let queryText = `
                 SELECT
@@ -156,10 +168,47 @@ class DbUtils {
 
             let conditions = [];
             let values = [];
+            
+            if (filters.user_id) {
+                conditions.push(`t.user_id = $${conditions.length + 1}`);
+                values.push(filters.user_id);
+            }
 
-            if (date) {
+            if (filters.account_id) {
+                conditions.push(`t.account_id = $${conditions.length + 1}`);
+                values.push(filters.account_id);
+            }
+
+            if (filters.category_id) {
+                conditions.push(`t.category_id = $${conditions.length + 1}`);
+                values.push(filters.category_id);
+            }
+
+            if (filters.transaction_note) {
+                conditions.push(`t.transaction_note ILIKE $${conditions.length + 1}`);
+                values.push(`%${filters.transaction_note}%`);
+            }
+
+            if (filters.transaction_type) {
+                conditions.push(`t.transaction_type = $${conditions.length + 1}`);
+                values.push(filters.transaction_type);
+            }
+
+            // Pencarian berdasarkan rentang tanggal
+            if (filters.is_relative_date_enabled) {
+                if (filters.transaction_date_from && filters.transaction_date_to) {
+                    conditions.push(`DATE(t.transaction_date) BETWEEN $${conditions.length + 1} AND $${conditions.length + 2}`);
+                    values.push(filters.transaction_date_from, filters.transaction_date_to);
+                } else if (filters.transaction_date_from) {
+                    conditions.push(`DATE(t.transaction_date) >= $${conditions.length + 1}`);
+                    values.push(filters.transaction_date_from);
+                } else if (filters.transaction_date_to) {
+                    conditions.push(`DATE(t.transaction_date) <= $${conditions.length + 1}`);
+                    values.push(filters.transaction_date_to);
+                }
+            } else if (filters.transaction_date_from) {
                 conditions.push(`DATE(t.transaction_date) = $${conditions.length + 1}`);
-                values.push(date);
+                values.push(filters.transaction_date_from);
             }
 
             if (conditions.length > 0) {

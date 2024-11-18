@@ -94,8 +94,8 @@ class TransactionController {
     static async filterTransaction(req, res) {
         try {
             const filters = Parser.parserTransactionFilters(req.body);
-            const response = await TransactionModel.searchTransaction(filters);            
-            const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(filters.transaction_date);
+            const response = await TransactionModel.searchTransaction(filters);
+            const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(filters);
 
             const transactions = response.map((v, i) => {
                 return {
@@ -123,7 +123,7 @@ class TransactionController {
 
             res.json(Response.success({ count, transactions }, "Berhasil mendapatkan data transaksi"));
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res.status(500).json(Response.failed(err.message));
         }
     }
 }
