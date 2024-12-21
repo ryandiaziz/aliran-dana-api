@@ -1,31 +1,31 @@
-import DbUtils from "../helpers/DbUtils.js";
+import DbUtils from "../helpers/DbHelper.js";
 
-class UserModel {    
+class UserModel {
     static TABLE_NAME = "users";
     static ID_NAME = "user_id";
 
     static async index(pageSize = 0, page = 1) {
         return DbUtils.index({
-            tableName : this.TABLE_NAME,
-            order : `ORDER BY ${this.ID_NAME}`
+            tableName: this.TABLE_NAME,
+            order: `ORDER BY ${this.ID_NAME}`
         });
     }
 
-    static async getOneUser(id){
+    static async getOneUser(id) {
         return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
     }
-    
-    static async createUser({username, email, password}) {
+
+    static async createUser({ username, email, password }) {
         const query = {
             text: `INSERT INTO ${this.TABLE_NAME}(username, email, password, created_at, updated_at) VALUES($1, $2, $3, NOW(), NOW()) RETURNING *`,
             values: [username, email, password]
         }
-        
+
         return DbUtils.createAndUpdate(query);
     }
 
-    static async updateUser({username, email, password, id}) {
-        const user = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);                        
+    static async updateUser({ username, email, password, id }) {
+        const user = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
         if (!username) username = user.username;
         if (!email) email = user.email;
         if (!password) password = user.password;
@@ -39,7 +39,7 @@ class UserModel {
     }
 
     static async deleteUser(id) {
-        return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);        
+        return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);
     }
 }
 

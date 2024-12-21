@@ -1,4 +1,4 @@
-import DbUtils from "../helpers/DbUtils.js";
+import DbUtils from "../helpers/DbHelper.js";
 import AccountModel from "./accountModel.js";
 
 class TransactionModel {

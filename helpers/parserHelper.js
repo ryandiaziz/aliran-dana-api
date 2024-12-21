@@ -1,4 +1,4 @@
-import Validate from "./Validate.js";
+import Validate from "./validateHelper.js";
 
 class Parser {
     static parserTransactionFilters(body) {

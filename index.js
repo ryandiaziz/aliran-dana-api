@@ -1,13 +1,12 @@
-import dotenv from 'dotenv'
-import cors from 'cors'
-import express from 'express'
+import cors from 'cors';
+import express from 'express';
 import bodyParser from 'body-parser';
-import Routes from './routes/index.js'
-import client from './connection.js';
+import Routes from './routes/index.js';
+import client from './configs/databaseConfig.js';
+import { config } from './configs/dotenvConfig.js';
 
-dotenv.config()
 const app = express();
-const port = process.env.PORT || 3000;
+const port = config.port;
 
 app.use(cors());
 app.use(express.json());

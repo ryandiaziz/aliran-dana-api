@@ -17,7 +17,7 @@ class Validate {
         else return value;
     }
 
-    static valueBoolean({value, name = 'value'}) {
+    static valueBoolean({ value, name = 'value' }) {
         if (value === undefined || value === null)
             throw new Error(`${name} : undefined or not found.`);
 
