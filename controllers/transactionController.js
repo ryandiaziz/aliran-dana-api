@@ -26,7 +26,12 @@ class TransactionController {
                 }
             });
 
-            res.json(Response.success(results, "Berhasil mendapatkan data transaksi"));
+            res.json(
+                Response.success({
+                    data: results,
+                    message: "Berhasil mendapatkan data transaksi"
+                })
+            );
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -39,11 +44,14 @@ class TransactionController {
 
             const check = await TransactionModel.getOneTransaction(id);
 
-            if (!check) {
-                throw new Error('item not found')
-            }
+            if (!check) throw new Error('item not found');
 
-            res.json(Response.success(data, "Berhasil mendapatkan transaksi"));
+            res.json(
+                Response.success({
+                    data,
+                    message: "Berhasil mendapatkan transaksi"
+                })
+            );
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -53,7 +61,12 @@ class TransactionController {
         try {
             const response = await TransactionModel.createTransaction({ ...req.body });
 
-            res.json(Response.success(response, "Berhasil menambahkan data transaksi"));
+            res.json(
+                Response.success({
+                    data: response,
+                    message: "Berhasil menambahkan data transaksi"
+                })
+            );
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -64,12 +77,17 @@ class TransactionController {
             const { id } = req.params;
 
             const check = await TransactionModel.getOneTransaction(id);
-            if (!check) {
-                throw new Error('item not found')
-            }
+
+            if (!check) throw new Error('item not found');
+
             const data = await TransactionModel.updateTransaction({ ...req.body, id })
 
-            res.json(Response.success(data, "Berhasil memperbarui data transaksi"));
+            res.json(
+                Response.success({
+                    data,
+                    message: "Berhasil memperbarui data transaksi"
+                })
+            );
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -80,12 +98,16 @@ class TransactionController {
             const { id } = req.params;
             const check = await TransactionModel.getOneTransaction(id);
 
-            if (!check) {
-                throw new Error('item not found');
-            }
+            if (!check) throw new Error('item not found');
 
             const response = await TransactionModel.deleteTransaction(id);
-            res.json(Response.success(response, "Berhasil menghapus data transaksi"));
+
+            res.json(
+                Response.success({
+                    data: response,
+                    message: "Berhasil menghapus data transaksi"
+                })
+            );
         } catch (err) {
             res.json(Response.failed(err.message));
         }
@@ -121,7 +143,12 @@ class TransactionController {
                 total: parseInt(total_income) - parseInt(total_expense)
             }
 
-            res.json(Response.success({ count, transactions }, "Berhasil mendapatkan data transaksi"));
+            res.json(
+                Response.success({
+                    data: { count, transactions },
+                    message: "Berhasil mendapatkan data transaksi"
+                })
+            );
         } catch (err) {
             res.status(500).json(Response.failed(err.message));
         }
