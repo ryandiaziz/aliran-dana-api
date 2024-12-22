@@ -5,6 +5,7 @@ dotenv.config();
 export const config = {
     // App
     port: process.env.PORT || 3000,
+    environtment: process.env.ENVIRONTMENT || 'DEVELOPMENT',
     saltRound: parseInt(process.env.SALT_ROUND),
     // JWT
     jwtSecret: process.env.JWT_SECRET,

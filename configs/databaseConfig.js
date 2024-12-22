@@ -2,13 +2,24 @@ import pkg from 'pg';
 import { config } from './dotenvConfig.js';
 
 const { Pool } = pkg;
+const poolConfig = () => {
+    switch (config.environtment) {
+        case 'PRODUCTION':
+            return {
+                connectionString: process.env.POSTGRES_URL + "?sslmode=require"
+            };
+        case 'DEVELOPMENT':
+            return {
+                host: config.pgHost,
+                user: config.pgUser,
+                password: config.pgPassword,
+                database: config.pgDatabase,
+            };
+        default:
+            throw new Error(`Unknown environment: ${environment}`);
+    }
+}
 
-const pool = new Pool({
-    // connectionString: process.env.POSTGRES_URL + "?sslmode=require"
-    host: config.pgHost,
-    user: config.pgUser,
-    password: config.pgPassword,
-    database: config.pgDatabase,
-})
+const pool = new Pool(poolConfig());
 
 export default pool
