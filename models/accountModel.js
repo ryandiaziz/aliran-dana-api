@@ -12,7 +12,7 @@ class AccountModel {
     }
 
     static async getOneAccount(id) {
-        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+        return DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
     }
 
     static async createAccount(account_name, account_balance, user_id) {
@@ -24,7 +24,7 @@ class AccountModel {
     }
 
     static async updateAccount(account_id, account_name, account_balance) {
-        const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, account_id);
+        const account = await DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, account_id);
         if (!account_name) account_name = account.account_name;
         if (!account_balance) account_balance = account.account_balance;
         const query = {
@@ -35,7 +35,7 @@ class AccountModel {
     }
 
     static async transactionAccount(id, transaction_amount, transaction_type) {
-        const account = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+        const account = await DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
 
         switch (transaction_type) {
             case 'income':

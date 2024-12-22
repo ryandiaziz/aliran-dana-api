@@ -12,7 +12,7 @@ class CategoryModel {
     }
 
     static async getOneCategory(id) {
-        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+        return DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
     }
 
     static async createCategory({ category_name, category_type, user_id }) {
@@ -25,7 +25,7 @@ class CategoryModel {
     }
 
     static async updateCategory({ category_id, category_name, category_type }) {
-        const category = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, category_id);
+        const category = await DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, category_id);
         if (!category_name) category_name = category.category_name;
         if (!category_type) category_type = category.category_type;
 

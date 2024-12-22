@@ -29,6 +29,27 @@ class Parser {
             })
         }
     }
+
+    static excludeFieldsFromArray(dataArray, fieldsToExclude = []) {
+        if (!Array.isArray(dataArray)) {
+            throw new Error('Input harus berupa array');
+        }
+
+        return dataArray.map(item => Parser.excludeFields(item, fieldsToExclude));
+    }
+
+    static excludeFields(data, fieldsToExclude = []) {
+        if (typeof data !== 'object' || data === null) {
+            throw new Error('Input harus berupa objek');
+        }
+
+        const result = { ...data };
+        for (const field of fieldsToExclude) {
+            delete result[field];
+        }
+
+        return result;
+    }
 }
 
 export default Parser;

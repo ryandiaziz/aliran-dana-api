@@ -1,7 +1,6 @@
-import e from "express";
 import { encryptPass } from "../helpers/bcryptHelper.js";
 
-export const encryptPassMiddleWare = (req, res, next) => {
+const encryptPassMiddleWare = (req, res, next) => {
     try {
         const body = req.body;
         const password = body.password;
@@ -19,3 +18,5 @@ export const encryptPassMiddleWare = (req, res, next) => {
         return res.status(500).json({ message: err.message });
     }
 }
+
+export default encryptPassMiddleWare;

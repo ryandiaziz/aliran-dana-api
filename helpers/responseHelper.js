@@ -1,23 +1,23 @@
-class Response{
-    static success(data, message = "Berhasil"){
+class Response {
+    static success({ data, message = "Berhasil" }) {
         return {
-            metaData : {
-                status : true,
+            metaData: {
+                status: true,
                 message
             },
-            response : {
+            response: {
                 data
             }
         }
     }
 
-    static failed(message){
+    static failed(message) {
         return {
-            metaData : {
-                status : false,
+            metaData: {
+                status: false,
                 message
             },
-            response : null
+            response: null
         }
     }
 }

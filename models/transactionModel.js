@@ -30,7 +30,7 @@ class TransactionModel {
     }
 
     static async getOneTransaction(id) {
-        return DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+        return DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
     }
 
     static async createTransaction({
@@ -61,7 +61,7 @@ class TransactionModel {
         account_id,
         id
     }) {
-        const transaction = await DbUtils.getOne(this.TABLE_NAME, this.ID_NAME, id);
+        const transaction = await DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
 
         if (!transaction_note) transaction_note = transaction.transaction_note;
         if (!transaction_amount) transaction_amount = transaction.transaction_amount;

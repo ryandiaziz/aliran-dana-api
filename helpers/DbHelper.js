@@ -30,7 +30,7 @@ class DbUtils {
         }
     }
 
-    static async getOne(table_name, id_name, id) {
+    static async getOneById(table_name, id_name, id) {
         try {
             const res = await pool.query(`SELECT * FROM ${table_name} WHERE ${id_name} = $1`, [id]);
             return res.rows[0];
@@ -39,11 +39,19 @@ class DbUtils {
         }
     }
 
+    static async getOneCustom({ table_name, column_name, value }) {
+        try {
+            const res = await pool.query(`SELECT * FROM ${table_name} WHERE ${column_name} = $1`, [value]);
+            return res.rows[0];
+        } catch (error) {
+            throw (error)
+        }
+    }
+
     static async createAndUpdate(query) {
         try {
-            const data = await pool.query(query)
-
-            return data.rows
+            const data = await pool.query(query);
+            return data.rows[0];
         } catch (error) {
             throw (error)
         }
@@ -168,7 +176,7 @@ class DbUtils {
 
             let conditions = [];
             let values = [];
-            
+
             if (filters.user_id) {
                 conditions.push(`t.user_id = $${conditions.length + 1}`);
                 values.push(filters.user_id);
