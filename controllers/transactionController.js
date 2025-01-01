@@ -1,6 +1,7 @@
 import TransactionModel from '../models/transactionModel.js';
-import Parser from '../helpers/parserHelper.js'
+import Parser from '../helpers/parserHelper.js';
 import Response from '../helpers/responseHelper.js';
+import CustomError from '../helpers/customErrorHelper.js';
 
 class TransactionController {
     static async index(req, res) {
@@ -33,7 +34,9 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 
@@ -41,10 +44,9 @@ class TransactionController {
         try {
             const { id } = req.params
             const data = await TransactionModel.getOneTransaction(id);
-
             const check = await TransactionModel.getOneTransaction(id);
 
-            if (!check) throw new Error('item not found');
+            if (!check) throw new CustomError('Transaction not found', 404);
 
             res.json(
                 Response.success({
@@ -53,12 +55,15 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 
     static async createTransaction(req, res) {
         try {
+            req.body.user_id = req.user.user_id;
             const response = await TransactionModel.createTransaction({ ...req.body });
 
             res.json(
@@ -68,17 +73,18 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 
     static async updateTransaction(req, res) {
         try {
             const { id } = req.params;
-
             const check = await TransactionModel.getOneTransaction(id);
 
-            if (!check) throw new Error('item not found');
+            if (!check) throw new CustomError('Transaction not found', 404);
 
             const data = await TransactionModel.updateTransaction({ ...req.body, id })
 
@@ -89,7 +95,9 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 
@@ -98,7 +106,7 @@ class TransactionController {
             const { id } = req.params;
             const check = await TransactionModel.getOneTransaction(id);
 
-            if (!check) throw new Error('item not found');
+            if (!check) throw new CustomError('Transaction not found', 404);
 
             const response = await TransactionModel.deleteTransaction(id);
 
@@ -109,12 +117,15 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 
     static async filterTransaction(req, res) {
         try {
+            req.body.user_id = req.user.user_id;
             const filters = Parser.parserTransactionFilters(req.body);
             const response = await TransactionModel.searchTransaction(filters);
             const { total_income, total_expense } = await TransactionModel.countTransactionIncomeAndExpense(filters);
@@ -150,7 +161,9 @@ class TransactionController {
                 })
             );
         } catch (err) {
-            res.status(500).json(Response.failed(err.message));
+            res
+                .status(err.statusCode || 500)
+                .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
 }
