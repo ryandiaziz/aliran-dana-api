@@ -1,20 +1,21 @@
 import pool from "../configs/databaseConfig.js";
 
 class DbUtils {
-    static async index({ tableName, pageSize = 0, page = 1, order = '' }) {
+    static async index({ tableName, userId, pageSize = 0, page = 1, order = '' }) {
         try {
             const queryDefault = {
-                text: `SELECT * FROM ${tableName} ${order}`
+                text: `SELECT * FROM ${tableName} WHERE user_id = ${userId} ${order}`
             };
 
             const queryPagination = {
-                text: `SELECT * FROM ${tableName} LIMIT $1 OFFSET $2 ${order}`,
-                values: [pageSize, ((page - 1) * pageSize)]
+                text: `SELECT * FROM ${tableName} WHERE user_id = $1 LIMIT $2 OFFSET $3 ${order}`,
+                values: [userId, pageSize, ((page - 1) * pageSize)]
             };
 
             const query = +pageSize === 0 ? queryDefault : queryPagination;
 
             const data = await pool.query(query);
+
             return data.rows;
         } catch (error) {
             throw (error)
@@ -234,13 +235,15 @@ class DbUtils {
         }
     }
 
-    static async totalAccountBalance() {
+    static async totalAccountBalance(userId) {
         try {
             const query = `
                 SELECT 
                     SUM(account_balance) AS total
                 FROM 
                     accounts
+                WHERE
+                    user_id = ${userId}
             `;
 
             const res = await pool.query(query);

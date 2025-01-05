@@ -4,9 +4,10 @@ class CategoryModel {
     static TABLE_NAME = "categories";
     static ID_NAME = "category_id";
 
-    static async index(pageSize = 0, page = 1) {
+    static async index(userId, pageSize = 0, page = 1) {
         return DbUtils.index({
             tableName: this.TABLE_NAME,
+            userId: userId,
             order: `ORDER BY ${this.ID_NAME}`
         });
     }

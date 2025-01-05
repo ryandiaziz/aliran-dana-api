@@ -4,9 +4,10 @@ class AccountModel {
     static TABLE_NAME = "accounts";
     static ID_NAME = "account_id";
 
-    static async index(pageSize = 0, page = 1) {
+    static async index(userId, pageSize = 0, page = 1) {
         return DbUtils.index({
             tableName: this.TABLE_NAME,
+            userId: userId,
             order: `ORDER BY ${this.ID_NAME}`
         });
     }
@@ -25,12 +26,15 @@ class AccountModel {
 
     static async updateAccount(account_id, account_name, account_balance) {
         const account = await DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, account_id);
+
         if (!account_name) account_name = account.account_name;
         if (!account_balance) account_balance = account.account_balance;
+
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET account_name = $1, account_balance = $2, updated_at = NOW() WHERE ${this.ID_NAME} = $3 RETURNING *`,
             values: [account_name, account_balance, account_id]
         }
+
         return DbUtils.createAndUpdate(query);
     }
 
@@ -44,9 +48,16 @@ class AccountModel {
             case 'expense':
                 account.account_balance -= transaction_amount;
                 break;
+            case 'incoming_transfer':
+                account.account_balance += transaction_amount;
+                break;
+            case 'outgoing_transfer':
+                account.account_balance -= transaction_amount;
+                break;
             default:
                 break;
         }
+
         const query = {
             text: `UPDATE ${this.TABLE_NAME} SET account_balance = $1, updated_at = NOW() WHERE ${this.ID_NAME} = $2 RETURNING *`,
             values: [account.account_balance, id]
@@ -59,8 +70,8 @@ class AccountModel {
         return DbUtils.delete(this.TABLE_NAME, this.ID_NAME, id);
     }
 
-    static async countTotalBalance() {
-        return DbUtils.totalAccountBalance();
+    static async countTotalBalance(userId) {
+        return DbUtils.totalAccountBalance(userId);
     }
 }
 

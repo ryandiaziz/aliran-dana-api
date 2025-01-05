@@ -5,7 +5,8 @@ class CategoryController {
     static async index(req, res) {
         try {
             // const { pageSize, page } = req.query
-            const data = await CategoryModel.index();
+            const userId = req.user.user_id;
+            const data = await CategoryModel.index(userId);
 
             res.json(
                 Response.success({
@@ -39,6 +40,7 @@ class CategoryController {
 
     static async createCategory(req, res) {
         try {
+            req.body.user_id = req.user.user_id;
             const response = await CategoryModel.createCategory({ ...req.body });
 
             res.json(

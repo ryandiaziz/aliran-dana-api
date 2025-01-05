@@ -4,8 +4,9 @@ import Response from '../helpers/responseHelper.js';
 class AccountController {
     static async index(req, res) {
         try {
-            const accounts = await AccountModel.index();
-            const { total } = await AccountModel.countTotalBalance();
+            const userId = req.user.user_id;
+            const accounts = await AccountModel.index(userId);
+            const { total } = await AccountModel.countTotalBalance(userId);
 
             res.json(
                 Response.success({
@@ -25,7 +26,6 @@ class AccountController {
         try {
             const { id } = req.params
             const data = await AccountModel.getOneAccount(id);
-
             const check = await AccountModel.getOneAccount(id);
 
             if (!check) throw new Error('item not found');
@@ -43,7 +43,8 @@ class AccountController {
 
     static async createAccount(req, res) {
         try {
-            const { account_name, account_balance, user_id } = req.body;
+            const { account_name, account_balance } = req.body;
+            const user_id = req.user.user_id;
             const response = await AccountModel.createAccount(account_name, account_balance, user_id);
 
             res.json(
