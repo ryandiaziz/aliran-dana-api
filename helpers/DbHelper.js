@@ -1,7 +1,7 @@
 import pool from "../configs/databaseConfig.js";
 
 class DbUtils {
-    static async index({ tableName, userId, pageSize = 0, page = 1, order = '' }) {
+    static async indexWithUserId({ tableName, userId, pageSize = 0, page = 1, order = '' }) {
         try {
             const queryDefault = {
                 text: `SELECT * FROM ${tableName} WHERE user_id = ${userId} ${order}`
@@ -10,6 +10,27 @@ class DbUtils {
             const queryPagination = {
                 text: `SELECT * FROM ${tableName} WHERE user_id = $1 LIMIT $2 OFFSET $3 ${order}`,
                 values: [userId, pageSize, ((page - 1) * pageSize)]
+            };
+
+            const query = +pageSize === 0 ? queryDefault : queryPagination;
+
+            const data = await pool.query(query);
+
+            return data.rows;
+        } catch (error) {
+            throw (error)
+        }
+    }
+
+    static async index({ tableName, pageSize = 0, page = 1, order = '' }) {
+        try {
+            const queryDefault = {
+                text: `SELECT * FROM ${tableName} ${order}`
+            };
+
+            const queryPagination = {
+                text: `SELECT * FROM ${tableName} LIMIT $1 OFFSET $2 ${order}`,
+                values: [pageSize, ((page - 1) * pageSize)]
             };
 
             const query = +pageSize === 0 ? queryDefault : queryPagination;

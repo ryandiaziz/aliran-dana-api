@@ -5,7 +5,7 @@ class CategoryModel {
     static ID_NAME = "category_id";
 
     static async index(userId, pageSize = 0, page = 1) {
-        return DbUtils.index({
+        return DbUtils.indexWithUserId({
             tableName: this.TABLE_NAME,
             userId: userId,
             order: `ORDER BY ${this.ID_NAME}`
