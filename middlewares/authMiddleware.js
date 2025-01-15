@@ -1,12 +1,17 @@
+import DbUtils from "../helpers/DbHelper.js";
 import { verifyToken } from "../helpers/jwtHelper.js";
 import Response from "../helpers/responseHelper.js";
+import AppSettingModel from "../models/appSettingModel.js";
+import UserModel from "../models/userModel.js";
 
 const authJWTMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Format: "Bearer TOKEN"
 
     if (!token)
-        return res.status(401).json(Response.failed('Access Denied. No token provided.'));
+        return res
+            .status(401)
+            .json(Response.failed('Access Denied. No token provided.'));
 
     try {
         const decoded = verifyToken(token);
@@ -16,6 +21,29 @@ const authJWTMiddleware = (req, res, next) => {
         return res
             .status(403)
             .json(Response.failed(err.message || 'Invalid or expired token.'));
+    }
+}
+
+export const validateRegistraion = async (req, res, next) => {
+    try {
+        const result = await DbUtils.executeTransaction(async () => {
+            const resAppSetting = await AppSettingModel.index();
+            const resUserCount = await UserModel.countUser();
+
+            const maxUsers = parseInt(resAppSetting[0].max_users);
+            const isRegistrationOpen = resAppSetting[0].is_registration_open;
+            const totalUsers = parseInt(resUserCount[0].total_rows);
+
+            if (!isRegistrationOpen) throw new Error("Registration not open");
+
+            if (totalUsers >= maxUsers) throw new Error("Maximum users");            
+        });
+
+        next();
+    } catch (error) {
+        return res
+            .status(403)
+            .json(Response.failed(error.message || 'Not allowed'));
     }
 }
 

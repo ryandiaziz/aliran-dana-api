@@ -273,6 +273,39 @@ class DbUtils {
             throw (error)
         }
     }
+
+    static async countRows(table_name){
+        try {
+            const query = `
+                SELECT COUNT(*) AS total_rows
+                FROM ${table_name}
+            `;
+
+            const res = await pool.query(query);
+            return res.rows;
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    static async executeTransaction(callback) {
+        const client = await pool.connect(); // Ambil koneksi dari pool
+        try {
+            await client.query('BEGIN'); // Mulai transaksi
+
+            // Jalankan callback yang berisi logic transaksi
+            const result = await callback(client);
+
+            await client.query('COMMIT'); // Commit transaksi jika sukses
+            return result; // Kembalikan hasil jika berhasil
+        } catch (error) {
+            await client.query('ROLLBACK'); // Rollback transaksi jika ada error
+            console.error('Transaction failed:', error.stack);
+            throw error; // Lempar error ke caller
+        } finally {
+            client.release(); // Lepaskan koneksi
+        }
+    }
 }
 
 export default DbUtils;

@@ -15,6 +15,10 @@ class UserModel {
         return DbUtils.getOneById(this.TABLE_NAME, this.ID_NAME, id);
     }
 
+    static async countUser(){
+        return DbUtils.countRows(this.TABLE_NAME);
+    }
+
     static async getOneUserByEmail(value) {
         return DbUtils.getOneCustom({
             table_name: this.TABLE_NAME,
