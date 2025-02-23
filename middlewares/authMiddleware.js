@@ -1,8 +1,8 @@
 import DbUtils from "../helpers/DbHelper.js";
-import { verifyToken } from "../helpers/jwtHelper.js";
 import Response from "../helpers/responseHelper.js";
 import AppSettingModel from "../models/appSettingModel.js";
 import UserModel from "../models/userModel.js";
+import { verifyToken } from "../helpers/jwtHelper.js";
 
 const authJWTMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -26,7 +26,7 @@ const authJWTMiddleware = (req, res, next) => {
 
 export const validateRegistraion = async (req, res, next) => {
     try {
-        const result = await DbUtils.executeTransaction(async () => {
+        await DbUtils.executeTransaction(async () => {
             const resAppSetting = await AppSettingModel.index();
             const resUserCount = await UserModel.countUser();
 
@@ -34,9 +34,9 @@ export const validateRegistraion = async (req, res, next) => {
             const isRegistrationOpen = resAppSetting[0].is_registration_open;
             const totalUsers = parseInt(resUserCount[0].total_rows);
 
-            if (!isRegistrationOpen) throw new Error("Registration not open");
+            if (!isRegistrationOpen) throw new Error("Registration not permitted");
 
-            if (totalUsers >= maxUsers) throw new Error("Maximum users");            
+            if (totalUsers >= maxUsers) throw new Error("The user has reached the maximum number");            
         });
 
         next();
