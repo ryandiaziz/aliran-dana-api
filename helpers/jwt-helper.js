@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { config } from '../configs/dotenvConfig.js';
+import { config } from '../configs/dotenv-config.js';
 
 const verifyToken = (token) => {
     return jwt.verify(token, config.jwtSecret);

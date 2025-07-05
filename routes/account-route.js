@@ -1,6 +1,6 @@
 import express from 'express';
-import AccountController from '../controllers/accountController.js';
-import authJWTMiddleware from '../middlewares/authMiddleware.js';
+import AccountController from '../controllers/account-controller.js';
+import authJWTMiddleware from '../middlewares/auth-middleware.js';
 
 const accountRoute = express.Router();
 

@@ -1,6 +1,6 @@
 import express from 'express';
-import CategoryController from '../controllers/categoryController.js';
-import authJWTMiddleware from '../middlewares/authMiddleware.js';
+import CategoryController from '../controllers/category-controller.js';
+import authJWTMiddleware from '../middlewares/auth-middleware.js';
 
 const categoryRoute = express.Router();
 

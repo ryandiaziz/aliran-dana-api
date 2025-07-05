@@ -1,4 +1,4 @@
-import { encryptPass } from "../helpers/bcryptHelper.js";
+import { encryptPass } from "../helpers/bcrypt-helper.js";
 
 const encryptPassMiddleWare = (req, res, next) => {
     try {

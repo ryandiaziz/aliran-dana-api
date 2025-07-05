@@ -1,5 +1,5 @@
 import express from 'express';
-import AppSettingController from '../controllers/appSettingController.js';
+import AppSettingController from '../controllers/app-setting-controller.js';
 
 const appSettingRoute = express.Router();
 

@@ -1,7 +1,7 @@
-import TransactionModel from '../models/transactionModel.js';
-import Parser from '../helpers/parserHelper.js';
-import Response from '../helpers/responseHelper.js';
-import CustomError from '../helpers/customErrorHelper.js';
+import TransactionModel from '../models/transaction-model.js';
+import Parser from '../helpers/parser-helper.js';
+import Response from '../helpers/response-helper.js';
+import CustomError from '../helpers/custom-error-helper.js';
 
 class TransactionController {
     static async index(req, res) {

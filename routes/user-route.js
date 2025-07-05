@@ -1,7 +1,7 @@
 import express from 'express';
-import UserController from '../controllers/userController.js';
-import encryptPassMiddleWare from '../middlewares/encryptPassMiddleware.js';
-import authJWTMiddleware, { validateRegistraion } from '../middlewares/authMiddleware.js';
+import UserController from '../controllers/user-controller.js';
+import encryptPassMiddleWare from '../middlewares/encrypt-pass-middleware.js';
+import authJWTMiddleware, { validateRegistraion } from '../middlewares/auth-middleware.js';
 
 const userRoute = express.Router();
 
