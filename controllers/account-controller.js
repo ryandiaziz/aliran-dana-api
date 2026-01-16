@@ -1,5 +1,5 @@
-import AccountModel from '../models/accountModel.js';
-import Response from '../helpers/responseHelper.js';
+import AccountModel from '../models/account-model.js';
+import Response from '../helpers/response-helper.js';
 
 class AccountController {
     static async index(req, res) {

@@ -1,5 +1,5 @@
-import DbUtils from "../helpers/DbHelper.js";
-import AccountModel from "./accountModel.js";
+import DbUtils from "../helpers/db-helper.js";
+import AccountModel from "./account-model.js";
 
 class TransactionModel {
     static TABLE_NAME = "transactions";

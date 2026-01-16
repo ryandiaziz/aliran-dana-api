@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { config } from '../configs/dotenvConfig.js';
+import { config } from '../configs/dotenv-config.js';
 
 const encryptPass = (plainPass) => bcrypt.hashSync(plainPass, config.saltRound);
 

@@ -1,9 +1,9 @@
-import UserModel from '../models/userModel.js';
-import Response from '../helpers/responseHelper.js';
-import CustomError from '../helpers/customErrorHelper.js';
-import Parser from '../helpers/parserHelper.js';
-import { decryptPass } from '../helpers/bcryptHelper.js';
-import { generateToken } from '../helpers/jwtHelper.js';
+import UserModel from '../models/user-model.js';
+import Response from '../helpers/response-helper.js';
+import CustomError from '../helpers/custom-error-helper.js';
+import Parser from '../helpers/parser-helper.js';
+import { decryptPass } from '../helpers/bcrypt-helper.js';
+import { generateToken } from '../helpers/jwt-helper.js';
 
 class UserController {
     static async index(req, res) {

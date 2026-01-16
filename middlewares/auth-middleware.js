@@ -1,8 +1,8 @@
-import DbUtils from "../helpers/DbHelper.js";
-import Response from "../helpers/responseHelper.js";
-import AppSettingModel from "../models/appSettingModel.js";
-import UserModel from "../models/userModel.js";
-import { verifyToken } from "../helpers/jwtHelper.js";
+import DbUtils from "../helpers/db-helper.js";
+import Response from "../helpers/response-helper.js";
+import AppSettingModel from "../models/app-setting-model.js";
+import UserModel from "../models/user-model.js";
+import { verifyToken } from "../helpers/jwt-helper.js";
 
 const authJWTMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;

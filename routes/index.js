@@ -1,9 +1,9 @@
 import express from 'express';
-import accountRoutes from './accountRoute.js';
-import userRoutes from './userRoute.js';
-import categoryRoutes from './categoryRoute.js';
-import transactionRoutes from './transactionRoute.js';
-import appSettingRoute from './appSettingRoute.js';
+import accountRoutes from './account-route.js';
+import userRoutes from './user-route.js';
+import categoryRoutes from './category-route.js';
+import transactionRoutes from './transaction-route.js';
+import appSettingRoute from './app-setting-route.js';
 
 const route = express.Router();
 

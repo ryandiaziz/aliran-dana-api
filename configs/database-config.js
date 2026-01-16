@@ -1,5 +1,5 @@
 import pkg from 'pg';
-import { config } from './dotenvConfig.js';
+import { config } from './dotenv-config.js';
 
 const { Pool } = pkg;
 const poolConfig = () => {

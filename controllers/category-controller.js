@@ -1,5 +1,5 @@
-import CategoryModel from '../models/categoryModel.js';
-import Response from '../helpers/responseHelper.js';
+import CategoryModel from '../models/category-model.js';
+import Response from '../helpers/response-helper.js';
 
 class CategoryController {
     static async index(req, res) {

@@ -2,8 +2,8 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 import Routes from './routes/index.js';
-import client from './configs/databaseConfig.js';
-import { config } from './configs/dotenvConfig.js';
+import client from './configs/database-config.js';
+import { config } from './configs/dotenv-config.js';
 
 const app = express();
 const port = config.port;

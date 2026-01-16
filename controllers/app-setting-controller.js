@@ -1,5 +1,5 @@
-import AppSettingModel from '../models/appSettingModel.js';
-import Response from '../helpers/responseHelper.js';
+import AppSettingModel from '../models/app-setting-model.js';
+import Response from '../helpers/response-helper.js';
 
 class AppSettingController{
     static async index(req, res){

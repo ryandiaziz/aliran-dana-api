@@ -1,4 +1,4 @@
-import DbUtils from "../helpers/DbHelper.js";
+import DbUtils from "../helpers/db-helper.js";
 
 class AppSettingModel {
     static TABLE_NAME = "app_settings";

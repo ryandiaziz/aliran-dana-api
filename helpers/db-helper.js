@@ -1,4 +1,4 @@
-import pool from "../configs/databaseConfig.js";
+import pool from "../configs/database-config.js";
 
 class DbUtils {
     static async indexWithUserId({ tableName, userId, pageSize = 0, page = 1, order = '' }) {
