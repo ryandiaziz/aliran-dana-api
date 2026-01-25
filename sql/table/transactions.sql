@@ -7,10 +7,12 @@ CREATE TABLE public.transactions (
 	user_id int NOT NULL,
 	category_id int NOT NULL,
 	account_id int NOT NULL,
+	destination_account_id int NULL,
 	created_at timestamp DEFAULT NOW() NOT NULL,
 	updated_at timestamp DEFAULT NOW() NOT NULL,
 	CONSTRAINT transactions_pk PRIMARY KEY (transaction_id),
 	CONSTRAINT transactions_users_fk FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT transactions_categories_fk FOREIGN KEY (category_id) REFERENCES public.categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT transactions_accounts_fk FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT transactions_accounts_fk FOREIGN KEY (account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT transactions_destination_fk FOREIGN KEY (destination_account_id) REFERENCES public.accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

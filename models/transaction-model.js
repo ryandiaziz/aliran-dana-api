@@ -40,13 +40,28 @@ class TransactionModel {
         transaction_date,
         user_id,
         category_id,
-        account_id
+        account_id,
+        destination_account_id
     }) {
-        await AccountModel.transactionAccount(account_id, transaction_amount, transaction_type);
+        await DbUtils.executeTransaction(async () => {
+             if (transaction_type === 'transfer') {
+                if (!destination_account_id) throw new CustomError("Destination account is required for transfer", 400);
+                if (account_id === destination_account_id) throw new CustomError("Cannot transfer to the same account", 400);
 
+                // 1. Debit Source
+                await AccountModel.transactionAccount(account_id, transaction_amount, 'outgoing_transfer');
+                // 2. Credit Destination
+                await AccountModel.transactionAccount(destination_account_id, transaction_amount, 'incoming_transfer');
+            } else {
+                // Normal income/expense
+                await AccountModel.transactionAccount(account_id, transaction_amount, transaction_type);
+            }
+        });
+
+        // Insert Record
         const query = {
-            text: `INSERT INTO ${this.TABLE_NAME}(transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, NOW(), NOW()) RETURNING *`,
-            values: [transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id]
+            text: `INSERT INTO ${this.TABLE_NAME}(transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id, destination_account_id, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()) RETURNING *`,
+            values: [transaction_note, transaction_amount, transaction_type, transaction_date, user_id, category_id, account_id, destination_account_id || null]
         }
 
         return DbUtils.createAndUpdate(query);
