@@ -166,6 +166,36 @@ class TransactionController {
                 .json(Response.failed(err.message || 'Something went wrong.'));
         }
     }
+
+    static async getCategorySummary(req, res) {
+        try {
+            const userId = req.user.user_id;
+            const { start_date, end_date, type } = req.query;
+
+            if (!start_date || !end_date) {
+                throw new CustomError('Start date and end date are required', 400);
+            }
+
+            const data = await TransactionModel.getCategorySummary(userId, start_date, end_date, type || 'expense');
+            res.json(Response.success({ data, message: "Berhasil mendapatkan ringkasan kategori" }));
+        } catch (err) {
+            res.status(err.statusCode || 500).json(Response.failed(err.message));
+        }
+    }
+
+    static async getMonthlyTrend(req, res) {
+        try {
+            const userId = req.user.user_id;
+            const { year } = req.query;
+            
+            const currentYear = year || new Date().getFullYear();
+
+            const data = await TransactionModel.getMonthlyTrend(userId, currentYear);
+            res.json(Response.success({ data, message: "Berhasil mendapatkan tren bulanan" }));
+        } catch (err) {
+            res.status(err.statusCode || 500).json(Response.failed(err.message));
+        }
+    }
 }
 
 export default TransactionController;

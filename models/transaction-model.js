@@ -104,6 +104,43 @@ class TransactionModel {
     static async countTransactionIncomeAndExpense(filters) {
         return DbUtils.countIncomeAndExpense(filters);
     }
+
+    static async getCategorySummary(userId, startDate, endDate, type = 'expense') {
+        const query = {
+            text: `
+                SELECT 
+                    c.category_name, 
+                    SUM(t.transaction_amount) as total
+                FROM transactions t
+                JOIN categories c ON t.category_id = c.category_id
+                WHERE t.user_id = $1 
+                AND t.transaction_type = $2
+                AND t.transaction_date BETWEEN $3 AND $4
+                GROUP BY c.category_name
+                ORDER BY total DESC
+            `,
+            values: [userId, type, startDate, endDate]
+        };
+        return DbUtils.indexQuery(query);
+    }
+
+    static async getMonthlyTrend(userId, year) {
+        const query = {
+            text: `
+                SELECT 
+                    EXTRACT(MONTH FROM t.transaction_date) as month,
+                    SUM(CASE WHEN t.transaction_type = 'income' THEN t.transaction_amount ELSE 0 END) as total_income,
+                    SUM(CASE WHEN t.transaction_type = 'expense' THEN t.transaction_amount ELSE 0 END) as total_expense
+                FROM transactions t
+                WHERE t.user_id = $1 
+                AND EXTRACT(YEAR FROM t.transaction_date) = $2
+                GROUP BY month
+                ORDER BY month ASC
+            `,
+            values: [userId, year]
+        };
+        return DbUtils.indexQuery(query);
+    }
 }
 
 export default TransactionModel

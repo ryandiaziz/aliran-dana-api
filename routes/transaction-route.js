@@ -8,6 +8,8 @@ const transactionRoute = express.Router();
 
 transactionRoute.get('/', authJWTMiddleware, TransactionController.index);
 transactionRoute.post('/filter', authJWTMiddleware, TransactionController.filterTransaction);
+transactionRoute.get('/summary/category', authJWTMiddleware, TransactionController.getCategorySummary);
+transactionRoute.get('/summary/trend', authJWTMiddleware, TransactionController.getMonthlyTrend);
 transactionRoute.get('/:id', authJWTMiddleware, TransactionController.getOneTransaction);
 transactionRoute.post('/', authJWTMiddleware, validate(createTransactionSchema), TransactionController.createTransaction);
 transactionRoute.put('/:id', authJWTMiddleware, TransactionController.updateTransaction);
