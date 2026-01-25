@@ -19,14 +19,20 @@ app.get('/', (req, res) => {
     })
 })
 
-app.listen(port, () => {
-    console.log(`App listen on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`App listen on port ${port}`);
+    });
+}
 
-client.connect(err => {
-    if (!err) {
-        console.log('Database connect')
-    } else {
-        console.log(err.message)
-    }
-})
+export default app;
+
+if (process.env.NODE_ENV !== 'test') {
+    client.connect(err => {
+        if (!err) {
+            console.log('Database connect')
+        } else {
+            console.log(err.message)
+        }
+    })
+}

@@ -24,7 +24,7 @@ const authJWTMiddleware = (req, res, next) => {
     }
 }
 
-export const validateRegistraion = async (req, res, next) => {
+export const validateRegistration = async (req, res, next) => {
     try {
         await DbUtils.executeTransaction(async () => {
             const resAppSetting = await AppSettingModel.index();
