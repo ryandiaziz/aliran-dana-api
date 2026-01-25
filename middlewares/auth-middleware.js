@@ -3,6 +3,7 @@ import Response from "../helpers/response-helper.js";
 import AppSettingModel from "../models/app-setting-model.js";
 import UserModel from "../models/user-model.js";
 import { verifyToken } from "../helpers/jwt-helper.js";
+import CustomError from "../helpers/custom-error-helper.js";
 
 const authJWTMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
