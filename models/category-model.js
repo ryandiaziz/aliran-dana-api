@@ -5,11 +5,11 @@ class CategoryModel {
     static ID_NAME = "category_id";
 
     static async index(userId, pageSize = 0, page = 1) {
-        return DbUtils.indexWithUserId({
-            tableName: this.TABLE_NAME,
-            userId: userId,
-            order: `ORDER BY ${this.ID_NAME}`
-        });
+        const query = {
+            text: `SELECT * FROM ${this.TABLE_NAME} WHERE user_id = $1 OR user_id IS NULL ORDER BY ${this.ID_NAME}`,
+            values: [userId]
+        };
+        return DbUtils.indexQuery(query);
     }
 
     static async getOneCategory(id) {
