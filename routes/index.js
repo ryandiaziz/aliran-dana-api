@@ -4,6 +4,7 @@ import userRoutes from './user-route.js';
 import categoryRoutes from './category-route.js';
 import transactionRoutes from './transaction-route.js';
 import appSettingRoute from './app-setting-route.js';
+import transferRoutes from './transfer-route.js';
 
 const route = express.Router();
 
@@ -17,6 +18,7 @@ route.use('/accounts', accountRoutes);
 route.use('/users', userRoutes);
 route.use('/categories', categoryRoutes);
 route.use('/transactions', transactionRoutes);
+route.use('/transfers', transferRoutes);
 route.use('/app_settings', appSettingRoute);
 
 
