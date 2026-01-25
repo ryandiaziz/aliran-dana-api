@@ -27,11 +27,16 @@ const authJWTMiddleware = (req, res, next) => {
 export const validateRegistration = async (req, res, next) => {
     try {
         await DbUtils.executeTransaction(async () => {
-            const resAppSetting = await AppSettingModel.index();
+            const settings = await AppSettingModel.getAllSettings();
             const resUserCount = await UserModel.countUser();
 
-            const maxUsers = parseInt(resAppSetting[0].max_users);
-            const isRegistrationOpen = resAppSetting[0].is_registration_open;
+            // Check maintenance mode (KV Store returns object)
+            if (settings.maintenance_mode === true) {
+                throw new CustomError('Maintenance Mode', 503);
+            }
+
+            const maxUsers = parseInt(settings.max_users);
+            const isRegistrationOpen = settings.is_registration_open;
             const totalUsers = parseInt(resUserCount[0].total_rows);
 
             if (!isRegistrationOpen) throw new Error("Registration not permitted");
